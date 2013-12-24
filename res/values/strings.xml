@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">InsServer</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_connect">Open connection</string>
+    <string name="clientstatusText">Client Status: </string>
+    <string name="ready">Ready</string>
+    <string name="notready">Not Ready</string>
+    <string name="stop">Stop</string>
+    <string name="menu_disconnect">Disconnect</string>
+    <string name="live">Live</string>
+    <string name="lowacc">Acccuracy Low</string>
+    <string name="off">Off</string>
+    <string name="name">Name</string>
+    <string name="walk">Walk</string>
+    <string name="turn">Turn</string>
+
+</resources>
