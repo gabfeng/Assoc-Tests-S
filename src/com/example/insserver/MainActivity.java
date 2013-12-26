@@ -36,8 +36,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-/*
- * Messages: what; 0 - misc, 1 - message read
+/**
+ * Main Activity for the Server side application. Starts into the main page defined by activity_main.xml
  */
 
 public class MainActivity extends Activity {
@@ -63,6 +63,11 @@ public class MainActivity extends Activity {
 	public Handler handler;
 	
 	
+	/**
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 * 
+	 * Initialises IDs, texts, bluetooth and handlers.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -85,10 +90,15 @@ public class MainActivity extends Activity {
 			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 		}
 		handler = new Handler() {
+			/**
+			 * @see android.os.Handler#handleMessage(android.os.Message)
+			 * 
+			 * Handles incoming messages. (Ideally should use another thread instead of UI thread)
+			 */
 			@Override
 			public void handleMessage(Message msg) {
-				switch(msg.what) {
-				case 0: 
+				switch(msg.what) { // what: 0 - misc, 1 - client status, 2 - handshake lost
+				case 0: //Connection message
 					CharSequence text = (String) msg.obj;
 					int duration = Toast.LENGTH_SHORT;
 					Toast toast = Toast.makeText(getApplicationContext(), text, duration);
@@ -99,7 +109,7 @@ public class MainActivity extends Activity {
 							send.setEnabled(true);
 					}
 					break;
-				case 1: //0->not ready, 1->ready, 2->Tracker live, 3->Tracker accuracy low, 4->Tracker stopped 
+				case 1: //Client status: 0->not ready, 1->ready, 2->Tracker live, 3->Tracker accuracy low, 4->Tracker stopped 
 					if((Integer)msg.obj==1) {
 						cs.setText(getResources().getString(R.string.ready));
 						cReady = true;
@@ -118,7 +128,7 @@ public class MainActivity extends Activity {
 						ts.setText(getResources().getString(R.string.off));
 					}
 					break;
-				case 2: 
+				case 2: //
 					CharSequence text2 = (String) msg.obj;
 					int duration2 = Toast.LENGTH_SHORT;
 					Toast toast2 = Toast.makeText(getApplicationContext(), text2, duration2);
@@ -132,6 +142,9 @@ public class MainActivity extends Activity {
 		};
 	}
 	
+	/**
+	 * Retrieve the IDs of elements on the main page.
+	 */
 	protected void getIDs() {		
 		act = (RadioGroup) findViewById(R.id.actionradio);
 		step = (RadioGroup) findViewById(R.id.stepradio);
@@ -151,6 +164,9 @@ public class MainActivity extends Activity {
 		tButton = (ToggleButton) findViewById(R.id.startT);
 	}
 	
+	/**
+	 * Set the default buttons to be enabled and create a default message. Message should not be able to be sent.
+	 */
 	private void setDefaults() {
 		message = new ArrayList<String>(5);
 		message.add((String)ra1.getText()); message.add((String)rs1.getText()); message.add((String)rd1.getText());
@@ -160,6 +176,9 @@ public class MainActivity extends Activity {
 		textDegrees.setEnabled(false);
 	}
 	
+	/**
+	 * Sets the texts of the buttons to a previously saved state or to the default of none is saved.
+	 */
 	private void setPrevious() {
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
 		if(!settings.getBoolean("saved", false)) {
@@ -213,6 +232,12 @@ public class MainActivity extends Activity {
 		textDegrees.setText(settings.getString("textDeg", "degrees to the"));
 	}
 	
+	/** 
+	 * @see android.app.Activity#onStop()
+	 * 
+	 * If connected to bluetooth kill Acceptthread, uncheck tracker button.
+	 * Show status text as not ready, disable send button.
+	 */
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -233,6 +258,11 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
+	/**
+	 * @param item
+	 * 
+	 * On menu item selection, new thread is created to accept incoming bluetooth connections.
+	 */
 	public void connectDevice(MenuItem item) {
 		if(!connect) {
 			at = new AcceptThread();
@@ -240,6 +270,11 @@ public class MainActivity extends Activity {
 		}
 	}
 	
+	/**
+	 * @param item
+	 * 
+	 * On menu item selection, bluetooth connection is disconnected.
+	 */
 	public void disconnectDevice(MenuItem item) {
 		if(connect) {
 			at.cancel();
@@ -257,6 +292,11 @@ public class MainActivity extends Activity {
 		toast.show();
 	}
 	
+	/**
+	 * @param item
+	 * 
+	 * On menu item selection, user is able to click buttons/text to edit their text.
+	 */
 	public void editWords(MenuItem item) {
 		if (!edit) {
 			edit = true;
@@ -270,6 +310,9 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Set message to be sent based on what radio buttons are selected.
+	 */
 	private void setMessage() {
 		switch(act.getCheckedRadioButtonId()) {
 		case R.id.walkbutton:
@@ -345,6 +388,12 @@ public class MainActivity extends Activity {
 		msgDegs = textDegrees.getText().toString();
 	}
 	
+	/**
+	 * @param name
+	 * @param rb
+	 * 
+	 * Produces dialog box for the user to enter the new text for the button/text.
+	 */
 	private void setNew(final String name, final TextView rb) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setTitle("Change word");  
@@ -376,6 +425,11 @@ public class MainActivity extends Activity {
 		alert.show();
 	}
 	
+	/**
+	 * @param item
+	 * 
+	 * Return buttons/texts to default.
+	 */
 	public void retDefault(MenuItem item) {
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
 		SharedPreferences.Editor edit = settings.edit();
@@ -386,20 +440,21 @@ public class MainActivity extends Activity {
 	}
 	
 	/**
-	 * Emergency signals can febe sent even if client is not ready.
 	 * @param view
+	 * 
+	 * Sends an emergency stop signal to client. Can be sent even if client is not ready.
 	 */
 	public void eStop(View view) {
 		if(connect) {
 			String s= "Sound:Stop";
 			sent.setText("Message sent: Emergency Stop!");
 			at.wt.write(s.getBytes());
-		}else if(connect && !cReady){
+		}/*else if(connect && !cReady){
 			CharSequence text = "Not ready";
 			int duration = Toast.LENGTH_SHORT;
 			Toast toast = Toast.makeText(getApplicationContext(), text, duration);
 			toast.show();
-		}else if(!connect){
+		}*/else if(!connect){
 			CharSequence text = "Not connected";
 			int duration = Toast.LENGTH_SHORT;
 			Toast toast = Toast.makeText(getApplicationContext(), text, duration);
@@ -407,6 +462,11 @@ public class MainActivity extends Activity {
 		}
 	}
 	
+	/**
+	 * @param view
+	 * 
+	 * When startT button is pressed send a signal to client to begin logging.
+	 */
 	public void startLog(View view) {
 		boolean on = ((ToggleButton) view).isChecked();
 		if(!connect){
@@ -422,6 +482,13 @@ public class MainActivity extends Activity {
 		}
 	}
 	
+	/**
+	 * @param view
+	 * 
+	 * Called when an action radiobutton is clicked. ie. Walk or Turn.
+	 * Enables or disables other buttons based on which is selected.
+	 * Also sets message based on selected radio buttons.
+	 */
 	public void onActionClicked(View view) {
 		boolean checked = ((RadioButton) view).isChecked();
 	    
@@ -473,6 +540,11 @@ public class MainActivity extends Activity {
 	    }
 	}
 	
+	/**
+	 * @param view
+	 * 
+	 * Called when a step value radio button is pressed. Also sets the message accordingly.
+	 */
 	public void onStepClicked(View view) {
 		boolean checked = ((RadioButton) view).isChecked();
 
@@ -553,6 +625,11 @@ public class MainActivity extends Activity {
 		}
 	}
 	
+	/**
+	 * @param view
+	 * 
+	 * Called when a turn value radio button is pressed. Also sets the message accordingly
+	 */
 	public void onTurnClicked(View view) {
 		boolean checked = ((RadioButton) view).isChecked();
 
@@ -599,6 +676,11 @@ public class MainActivity extends Activity {
 		
 	}
 	
+	/**
+	 * @param view
+	 * 
+	 * Called when a direction radio button is pressed. Also sets the message accordingly
+	 */
 	public void onDirClicked(View view) {
 		boolean checked = ((RadioButton) view).isChecked();
 
@@ -639,6 +721,12 @@ public class MainActivity extends Activity {
 		}		
 	}
 	
+	/**
+	 * @param view
+	 * 
+	 * Called when the send button is pressed. Send button is only enabled when connected.
+	 * The message is sent to the client application.
+	 */
 	public void onSendClicked(View view) {
 		if(message.size() < 5) {
 			sent.setText("Message size error, not sent.");
@@ -667,6 +755,11 @@ public class MainActivity extends Activity {
 			at.wt.write(b);
 	}
 	
+	/**
+	 * @param view
+	 * 
+	 * Called when a text is pressed. Allows text edits.
+	 */
 	public void textEdit(View view) {
 		if(edit) {
 			switch(view.getId()) {
@@ -680,6 +773,13 @@ public class MainActivity extends Activity {
 		}
 	}
 	
+	/**
+	 * @param mid
+	 * @param whole
+	 * @return a byte array consisting of the message to be sent
+	 * 
+	 * Converts the message to be sent from a string array to a byte array.
+	 */
 	private byte[] msgToByteArray(String mid, String whole) {
 		ArrayList<String> bA = new ArrayList<String>();
 		bA.add(message.get(0));//Action
@@ -705,6 +805,11 @@ public class MainActivity extends Activity {
 		return b;		
 	}
 	
+	/**
+	 * @author Gabriel
+	 *
+	 * Thread for accepting bluetooth connections.
+	 */
 	private class AcceptThread extends Thread {
 		private final BluetoothServerSocket mmServerSocket;
 		private final String MY_UUID = "e4e7dcc0-0d67-11e3-8ffd-0800200c9a66";
@@ -712,6 +817,9 @@ public class MainActivity extends Activity {
 		public Handler aHandler;
 		private WorkerThread wt;
 		 
+	    /**
+	     * Constructor, initialises Bluetooth
+	     */
 	    public AcceptThread() {
 	        // Use a temporary object that is later assigned to mmServerSocket,
 	        // because mmServerSocket is final
@@ -723,6 +831,11 @@ public class MainActivity extends Activity {
 	        mmServerSocket = tmp;
 	    }
 	 
+	    /** 
+	     * @see java.lang.Thread#run()
+	     * 
+	     * Main method in thread. Creates handler thread to send message to worker thread.
+	     */
 	    public void run() {
 	        BluetoothSocket socket = null;
 	        // Create and start the HandlerThread - it requires a custom name
@@ -773,6 +886,12 @@ public class MainActivity extends Activity {
 	    }
 	}
 	
+	/**
+	 * @author Gabriel
+	 *
+	 * WorkerThread Class, mainly deals with writing messages to the Bluetooth stream, reading client's status
+	 * and running a handshake schedule.
+	 */
 	private class WorkerThread extends Thread {
 	    private final BluetoothSocket mmSocket;
 	    private final InputStream mmInStream;
@@ -781,6 +900,11 @@ public class MainActivity extends Activity {
 	    private boolean hs = true;
 	    public Handler wHandler;
 	 
+	    /**
+	     * @param socket
+	     * 
+	     * Constructor to initialise streams.
+	     */
 	    public WorkerThread(BluetoothSocket socket) {
 	        mmSocket = socket;
 	        InputStream tmpIn = null;
@@ -797,6 +921,11 @@ public class MainActivity extends Activity {
 	        mmOutStream = tmpOut;
 	    }
 	 
+	    /**
+	     * @see java.lang.Thread#run()
+	     * 
+	     * Main method for thread, schedules handshake. Sends client status to main thread to handle message.
+	     */
 	    public void run() {
 	        byte[] buffer = new byte[1024];  // buffer store for the stream
 	        int bytes; // bytes returned from read()
@@ -819,8 +948,9 @@ public class MainActivity extends Activity {
 	                //bytes = mmInStream.read(buffer);
 	            	clientStatus = mmInStream.read();
 	            	if(clientStatus == 5) hs = true;
-	                // Send the obtained bytes to the UI activity
-	                handler.obtainMessage(1, clientStatus).sendToTarget();
+	            	// Send the obtained bytes to the UI activity
+	            	else
+	            		handler.obtainMessage(1, clientStatus).sendToTarget();
 	            } catch (IOException e) {
 	                break;
 	            }
