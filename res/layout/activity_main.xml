@@ -44,8 +44,8 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="52dp"
-        android:layout_toRightOf="@+id/textView1"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/textView3"
         android:onClick="startLog"
         android:textOff="Start Log"
         android:textOn="Log and Stop" />
@@ -61,287 +61,437 @@
         android:text="@string/clientstatusText"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <RadioGroup
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/actionradio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/textView3"
-        android:layout_below="@+id/textView3"
-        android:layout_marginTop="20dp" >
-
-        <RadioButton
-            android:id="@+id/walkbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_marginTop="100dp"
-            android:checked="true"
-            android:onClick="onActionClicked"
-            android:text="@string/walk" />
-
-        <Space
-            android:layout_height="33dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="80dp" />
-
-        <RadioButton
-            android:id="@+id/turnbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left|bottom"
-            android:layout_marginTop="40dp"
-            android:onClick="onActionClicked"
-            android:text="@string/turn" />
-    </RadioGroup>
-
-    <RadioGroup
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/stepradio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/actionradio"
-        android:layout_marginLeft="120dp"
-        android:layout_toRightOf="@id/actionradio" >
-
-        <RadioButton
-            android:id="@+id/onestep"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:onClick="onStepClicked"
-            android:text="One" />
-
-        <RadioButton
-            android:id="@+id/twostep"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:onClick="onStepClicked"
-            android:text="Two" />
-
-        <RadioButton
-            android:id="@+id/threestep"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:onClick="onStepClicked"
-            android:text="Three" />
-
-        <RadioButton
-            android:id="@+id/fourstep"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:onClick="onStepClicked"
-            android:text="Four" />
-
-        <RadioButton
-            android:id="@+id/fivestep"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:onClick="onStepClicked"
-            android:text="Five" />
-
-        <RadioButton
-            android:id="@+id/sixstep"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:onClick="onStepClicked"
-            android:text="Six" />
-
-        <RadioButton
-            android:id="@+id/sevenstep"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:onClick="onStepClicked"
-            android:text="Seven" />
-
-        <RadioButton
-            android:id="@+id/eightstep"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:onClick="onStepClicked"
-            android:text="Eight" />
-
-        <RadioButton
-            android:id="@+id/ninestep"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:onClick="onStepClicked"
-            android:text="Nine" />
-
-        <RadioButton
-            android:id="@+id/tenstep"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:onClick="onStepClicked"
-            android:text="Ten" />
-    </RadioGroup>
-
-    <RadioGroup
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/turnradio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
-        android:layout_marginLeft="120dp"
-        android:layout_marginTop="90dp"
-        android:layout_toRightOf="@+id/stepradio" >
-
-        <RadioButton
-            android:id="@+id/deg45"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:onClick="onTurnClicked"
-            android:text="45" />
-
-        <RadioButton
-            android:id="@+id/deg90"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:onClick="onTurnClicked"
-            android:text="90" />
-
-        <RadioButton
-            android:id="@+id/deg135"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:onClick="onTurnClicked"
-            android:text="135" />
-
-        <RadioButton
-            android:id="@+id/deg180"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:onClick="onTurnClicked"
-            android:text="180" />
-
-        <RadioButton
-            android:id="@+id/degcustom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:onClick="onTurnClicked"
-            android:text="Custom" />
-
-        <EditText
-            android:id="@+id/editdeg"
-            android:layout_width="90dp"
-            android:layout_height="48dp"
-            android:ems="3"
-            android:inputType="number" >
-        </EditText>
-    </RadioGroup>
-
-    <RadioGroup
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/dirradio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/turnradio"
-        android:layout_marginLeft="180dp"
-        android:layout_marginTop="70dp"
-        android:layout_toRightOf="@+id/turnradio" >
-
-        <RadioButton
-            android:id="@+id/forward"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:onClick="onDirClicked"
-            android:text="Forward" />
-
-        <RadioButton
-            android:id="@+id/back"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:onClick="onDirClicked"
-            android:text="Back" />
-
-        <RadioButton
-            android:id="@+id/right"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:onClick="onDirClicked"
-            android:text="Right" />
-
-        <RadioButton
-            android:id="@+id/left"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:onClick="onDirClicked"
-            android:text="Left" />
-    </RadioGroup>
-
-    <Button
-        android:id="@+id/send"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/dirradio"
-        android:layout_alignTop="@+id/dirradio"
-        android:layout_marginLeft="120dp"
-        android:layout_toRightOf="@+id/dirradio"
-        android:onClick="onSendClicked"
-        android:text="Send" />
-
     <TextView
         android:id="@+id/sent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/startT"
-        android:layout_alignBottom="@+id/startT"
-        android:layout_alignLeft="@+id/turnradio"
-        android:layout_marginLeft="45dp"
-        android:paddingLeft="10dp"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_toRightOf="@+id/textView1"
+        android:layout_marginLeft="50dp"
+        android:paddingTop="10dp"
         android:text="Message sent:"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:id="@+id/estop"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:onClick="eStop"
+        android:onClick="onStandardClicked"
         android:text="@string/stop" />
+
+    <Button
+        android:id="@+id/feelButton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/estop"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/estop"
+        android:onClick="onStandardClicked"
+        android:text="Feel" />
+
+    <Button
+        android:id="@+id/alignButton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/estop"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/feelButton"
+        android:onClick="onStandardClicked"
+        android:text="Align" />
+
+    <Button
+        android:id="@+id/scanButton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/estop"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/alignButton"
+        android:onClick="onStandardClicked"
+        android:text="Scan" />
+
+    <Button
+        android:id="@+id/popButton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/estop"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/scanButton"
+        android:onClick="onStandardClicked"
+        android:text="Pop up" />
+    
+    <Button
+        android:id="@+id/squareButton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/estop"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/popButton"
+        android:onClick="onStandardClicked"
+        android:text="Square off" />
+
+    <Button
+        android:id="@+id/send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignLeft="@id/estop"
+        android:layout_below="@+id/squareButton"
+        android:background="@drawable/sendbutton"
+        android:paddingTop="50dp"
+        android:paddingBottom="50dp"
+        android:onClick="onSendClicked"
+        android:text="Send" />
+
+    <Button
+        android:id="@+id/useButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView3"
+        android:padding="15dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/actionbutton"
+        android:onClick="onActionClicked"
+        android:text="Use" />
+
+    <EditText
+        android:id="@+id/customText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/useButton"
+        android:layout_alignBaseline="@id/useButton"
+        android:layout_marginLeft="70dp"
+        android:hint="Use your own command."
+        android:ems="40" />
+
+    <Button
+        android:id="@+id/walkButton"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/shorelineButton"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/actionbutton"
+        android:onClick="onActionClicked"
+        android:text="Walk" />
+
+    <Button
+        android:id="@+id/button1"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/walkButton"
+        android:layout_toRightOf="@id/walkButton"
+        android:layout_marginLeft="70dp"
+        android:background="@drawable/distbutton"
+        android:onClick="onStepClicked"
+        android:text="1" />
+
+    <Button
+        android:id="@+id/button2"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/walkButton"
+        android:layout_toRightOf="@+id/button1"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/distbutton"
+        android:onClick="onStepClicked"
+        android:text="2" />
+
+    <Button
+        android:id="@+id/button3"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/walkButton"
+        android:layout_toRightOf="@+id/button2"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/distbutton"
+        android:onClick="onStepClicked"
+        android:text="3" />
+
+    <Button
+        android:id="@+id/button4"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/walkButton"
+        android:layout_toRightOf="@+id/button3"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/distbutton"
+        android:onClick="onStepClicked"
+        android:text="4" />
+
+    <Button
+        android:id="@+id/button5"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/walkButton"
+        android:layout_toRightOf="@+id/button4"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/distbutton"
+        android:onClick="onStepClicked"
+        android:text="5" />
+
+    <Button
+        android:id="@+id/button6"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/walkButton"
+        android:layout_toRightOf="@+id/button5"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/distbutton"
+        android:onClick="onStepClicked"
+        android:text="6" />
+
+    <Button
+        android:id="@+id/button7"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/walkButton"
+        android:layout_toRightOf="@+id/button6"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/distbutton"
+        android:onClick="onStepClicked"
+        android:text="7" />
+
+    <Button
+        android:id="@+id/button8"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/walkButton"
+        android:layout_toRightOf="@+id/button7"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/distbutton"
+        android:onClick="onStepClicked"
+        android:text="8" />
+
+    <Button
+        android:id="@+id/button9"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/walkButton"
+        android:layout_toRightOf="@+id/button8"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/distbutton"
+        android:onClick="onStepClicked"
+        android:text="9" />
+
+    <Button
+        android:id="@+id/button10"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/walkButton"
+        android:layout_toRightOf="@+id/button9"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/distbutton"
+        android:onClick="onStepClicked"
+        android:text="10" />
 
     <TextView
         android:id="@+id/textSteps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="230dp"
-        android:layout_toRightOf="@+id/stepradio"
+        android:layout_below="@id/walkButton"
+        android:layout_alignLeft="@id/button1"
+        android:layout_marginTop="30dp"
         android:clickable="true"
         android:onClick="textEdit"
         android:text="steps"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <Button
+        android:id="@+id/forwardButton"
+		android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/textSteps"
+        android:layout_toRightOf="@id/textSteps"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/dirbutton"
+        android:onClick="onDirClicked"
+        android:text="Forward" />
+    
+    <Button
+        android:id="@+id/backButton"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/textSteps"
+        android:layout_toRightOf="@id/forwardButton"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/dirbutton"
+        android:onClick="onDirClicked"
+        android:text="Back" />
+
+    <Button
+        android:id="@+id/turnButton"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/useButton"
+        android:background="@drawable/actionbutton"
+        android:onClick="onActionClicked"
+        android:text="Turn" />
+
+    <Button
+        android:id="@+id/deg45"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/turnButton"
+        android:layout_toRightOf="@id/turnButton"
+        android:layout_marginLeft="70dp"
+        android:background="@drawable/distbutton"
+        android:onClick="onTurnClicked"
+        android:text="45" />
+
+    <Button
+        android:id="@+id/deg90"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/turnButton"
+        android:layout_toRightOf="@id/deg45"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/distbutton"
+        android:onClick="onTurnClicked"
+        android:text="90" />
+
+    <Button
+        android:id="@+id/deg135"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/turnButton"
+        android:layout_toRightOf="@id/deg90"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/distbutton"
+        android:onClick="onTurnClicked"
+        android:text="135" />
+
+    <Button
+        android:id="@+id/deg180"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/turnButton"
+        android:layout_toRightOf="@id/deg135"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/distbutton"
+        android:onClick="onTurnClicked"
+        android:text="180" />
+
+    <Button
+        android:id="@+id/degcustom"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/turnButton"
+        android:layout_toRightOf="@id/deg180"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/distbutton"
+        android:onClick="onTurnClicked"
+        android:text="Custom" />
+
+    <EditText
+        android:id="@+id/editdeg"
+        android:layout_width="90dp"
+        android:layout_height="48dp"
+        android:layout_alignBaseline="@+id/turnButton"
+        android:layout_toRightOf="@id/degcustom"
+        android:ems="3"
+        android:inputType="number" >
+    </EditText>
 
     <TextView
         android:id="@+id/textDegs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_alignBaseline="@+id/turnButton"
+        android:layout_toRightOf="@+id/editdeg"
         android:layout_marginLeft="30dp"
-        android:layout_toRightOf="@+id/turnradio"
         android:clickable="true"
         android:onClick="textEdit"
         android:text="degrees to the"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <Button
+        android:id="@+id/leftButton"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/turnButton"
+        android:layout_toRightOf="@id/textDegs"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/dirbutton"
+        android:onClick="onDirClicked"
+        android:text="Left" />
+    
+    <Button
+        android:id="@+id/rightButton"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/turnButton"
+        android:layout_toRightOf="@id/leftButton"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/dirbutton"
+        android:onClick="onDirClicked"
+        android:text="Right" />
 
+    <Button
+        android:id="@+id/shorelineButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/turnButton"
+        android:layout_alignRight="@+id/textView3"
+        android:layout_below="@id/turnButton"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/actionbutton"
+        android:onClick="onActionClicked"
+        android:padding="15dp"
+        android:text="@string/shoreline" />
+
+    <Button
+        android:id="@+id/shoreLeftButton"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/shorelineButton"
+        android:layout_toRightOf="@id/shorelineButton"
+        android:layout_marginLeft="70dp"
+        android:background="@drawable/dirbutton"
+        android:onClick="onDirClicked"
+        android:text="Left" />
+
+    <Button
+        android:id="@+id/shoreRightButton"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/shorelineButton"
+        android:layout_toRightOf="@id/shoreLeftButton"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/dirbutton"
+        android:onClick="onDirClicked"
+        android:text="Right" />
 </RelativeLayout>

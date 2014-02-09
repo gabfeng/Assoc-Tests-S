@@ -30,8 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -46,10 +44,9 @@ public class MainActivity extends Activity {
 	private int REQUEST_ENABLE_BT;
 	private Set<BluetoothDevice> pairedDevices;
 	private TextView cs, sent, ts, textSteps, textDegrees;
-	private RadioGroup act, step, turn, dir;
-	private Button send;
-	private RadioButton ra1, ra2, rs1,rs2,rs3,rs4,rs5,rs6,rs7,rs8,rs9,rs10, rt1,rt2,rt3,rt4,rt5, rd1,rd2,rd3,rd4;
-	private EditText editdeg;
+	private Button send, actT, actW, actS;
+	private Button s1,s2,s3,s4,s5,s6,s7,s8,s9,s10, t1,t2,t3,t4,t5, dF,dB,dR,dL, dSR, dSL;
+	private EditText editdeg, customTxt;
 	private String msgSteps = "steps";
 	private String msgDegs = "degrees to the";
 	private String newW;
@@ -59,6 +56,8 @@ public class MainActivity extends Activity {
 	private boolean connect;
 	private boolean cReady = false;
 	private boolean edit = false;
+	private boolean customDeg = false;
+	private boolean customCmd = false;
 	private ArrayList<String> message;
 	public Handler handler;
 	
@@ -74,7 +73,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		getIDs(); 
-		setDefaults();
+		setBase();
 		setPrevious();
 		
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -129,11 +128,13 @@ public class MainActivity extends Activity {
 					}
 					break;
 				case 2: //
-					CharSequence text2 = (String) msg.obj;
-					int duration2 = Toast.LENGTH_SHORT;
-					Toast toast2 = Toast.makeText(getApplicationContext(), text2, duration2);
-					toast2.show();
-					disconnectDevice(null);
+					if(connect) {
+						CharSequence text2 = (String) msg.obj;
+						int duration2 = Toast.LENGTH_SHORT;
+						Toast toast2 = Toast.makeText(getApplicationContext(), text2, duration2);
+						toast2.show();
+						disconnectDevice();
+					}
 					break;
 				default: super.handleMessage(msg);
 				}
@@ -146,15 +147,14 @@ public class MainActivity extends Activity {
 	 * Retrieve the IDs of elements on the main page.
 	 */
 	protected void getIDs() {		
-		act = (RadioGroup) findViewById(R.id.actionradio);
-		step = (RadioGroup) findViewById(R.id.stepradio);
-		turn = (RadioGroup) findViewById(R.id.turnradio);
-		dir = (RadioGroup) findViewById(R.id.dirradio);
-		ra1 = (RadioButton) findViewById(R.id.walkbutton); ra2 = (RadioButton) findViewById(R.id.turnbutton);
-		rs1 = (RadioButton) findViewById(R.id.onestep); rs2 = (RadioButton) findViewById(R.id.twostep); rs3 = (RadioButton) findViewById(R.id.threestep); rs4 = (RadioButton) findViewById(R.id.fourstep); rs5 = (RadioButton) findViewById(R.id.fivestep);
-		rs6 = (RadioButton) findViewById(R.id.sixstep); rs7 = (RadioButton) findViewById(R.id.sevenstep); rs8 = (RadioButton) findViewById(R.id.eightstep); rs9 = (RadioButton) findViewById(R.id.ninestep); rs10 = (RadioButton) findViewById(R.id.tenstep);
-		rt1 = (RadioButton) findViewById(R.id.deg45); rt2 = (RadioButton) findViewById(R.id.deg90); rt3 = (RadioButton) findViewById(R.id.deg135); rt4 = (RadioButton) findViewById(R.id.deg180); rt5 = (RadioButton) findViewById(R.id.degcustom);  editdeg = (EditText) findViewById(R.id.editdeg);
-		rd1 = (RadioButton) findViewById(R.id.forward); rd2 = (RadioButton) findViewById(R.id.back); rd3 = (RadioButton) findViewById(R.id.right); rd4 = (RadioButton) findViewById(R.id.left);
+		actW = (Button) findViewById(R.id.walkButton); 
+		actT = (Button) findViewById(R.id.turnButton); 
+		actS = (Button) findViewById(R.id.shorelineButton);
+		s1 = (Button) findViewById(R.id.button1); s2 = (Button) findViewById(R.id.button2); s3 = (Button) findViewById(R.id.button3); s4 = (Button) findViewById(R.id.button4); s5 = (Button) findViewById(R.id.button5);
+		s6 = (Button) findViewById(R.id.button6); s7 = (Button) findViewById(R.id.button7); s8 = (Button) findViewById(R.id.button8); s9 = (Button) findViewById(R.id.button9); s10 = (Button) findViewById(R.id.button10);
+		t1 = (Button) findViewById(R.id.deg45); t2 = (Button) findViewById(R.id.deg90); t3 = (Button) findViewById(R.id.deg135); t4 = (Button) findViewById(R.id.deg180); t5 = (Button) findViewById(R.id.degcustom);  editdeg = (EditText) findViewById(R.id.editdeg);
+		dF = (Button) findViewById(R.id.forwardButton); dB = (Button) findViewById(R.id.backButton); dR = (Button) findViewById(R.id.rightButton); dL = (Button) findViewById(R.id.leftButton); dSL = (Button) findViewById(R.id.shoreLeftButton); dSR = (Button) findViewById(R.id.shoreRightButton);
+		customTxt = (EditText) findViewById(R.id.customText);
 		textSteps = (TextView) findViewById(R.id.textSteps);
 		textDegrees = (TextView) findViewById(R.id.textDegs);
 		send = (Button) findViewById(R.id.send);
@@ -167,13 +167,13 @@ public class MainActivity extends Activity {
 	/**
 	 * Set the default buttons to be enabled and create a default message. Message should not be able to be sent.
 	 */
-	private void setDefaults() {
+	private void setBase() {
 		message = new ArrayList<String>(5);
-		message.add((String)ra1.getText()); message.add((String)rs1.getText()); message.add((String)rd1.getText());
-		message.add("");message.add("");
-		turn.setEnabled(false); send.setEnabled(false); rd1.setEnabled(true); rd2.setEnabled(true); rd3.setEnabled(false); rd4.setEnabled(false);
-		rt1.setEnabled(false);rt2.setEnabled(false);rt3.setEnabled(false);rt4.setEnabled(false);rt5.setEnabled(false);editdeg.setEnabled(false);
-		textDegrees.setEnabled(false);
+		message.add((String)actW.getText()); message.add((String)s1.getText()); message.add(msgDegs); message.add((String)dF.getText());
+		message.add("Walk");message.add("");
+		t1.setEnabled(false); t2.setEnabled(false); t3.setEnabled(false); t4.setEnabled(false); t5.setEnabled(false); editdeg.setEnabled(false);
+		dF.setEnabled(true); dB.setEnabled(true); dR.setEnabled(false); dL.setEnabled(false); dSR.setEnabled(false); dSL.setEnabled(false);
+		send.setEnabled(false); textDegrees.setEnabled(false);
 	}
 	
 	/**
@@ -182,52 +182,51 @@ public class MainActivity extends Activity {
 	private void setPrevious() {
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
 		if(!settings.getBoolean("saved", false)) {
-			ra1.setText("Walk");
-			ra2.setText("Turn");
-			rs1.setText("One");
-			rs2.setText("Two");
-			rs3.setText("Three");
-			rs4.setText("Four");
-			rs5.setText("Five");
-			rs6.setText("Six");
-			rs7.setText("Seven");
-			rs8.setText("Eight");
-			rs9.setText("Nine");
-			rs10.setText("Ten");
-			rt1.setText("45");
-			rt2.setText("90");
-			rt3.setText("135");
-			rt4.setText("180");
-			rt5.setText("Custom");
-			rd1.setText("Forward");
-			rd2.setText("Back");
-			rd3.setText("Right");
-			rd4.setText("Left");
+			actW.setText("Walk"); actT.setText("Turn"); actS.setText(R.string.shoreline);
+			s1.setText("One");
+			s2.setText("Two");
+			s3.setText("Three");
+			s4.setText("Four");
+			s5.setText("Five");
+			s6.setText("Six");
+			s7.setText("Seven");
+			s8.setText("Eight");
+			s9.setText("Nine");
+			s10.setText("Ten");
+			t1.setText("45");
+			t2.setText("90");
+			t3.setText("135");
+			t4.setText("180");
+			t5.setText("Custom");
+			dF.setText("Forward"); dB.setText("Back"); dR.setText("Right"); dL.setText("Left"); dSR.setText("Right"); dSL.setText("Left");
 			textSteps.setText("steps");
 			textDegrees.setText("degrees to the");
 			return;
 		}
-		ra1.setText(settings.getString("ra1", "Walk"));
-		ra2.setText(settings.getString("ra2", "Turn"));
-		rs1.setText(settings.getString("rs1", "One"));
-		rs2.setText(settings.getString("rs2", "Two"));
-		rs3.setText(settings.getString("rs3", "Three"));
-		rs4.setText(settings.getString("rs4", "Four"));
-		rs5.setText(settings.getString("rs5", "Five"));
-		rs6.setText(settings.getString("rs6", "Six"));
-		rs7.setText(settings.getString("rs7", "Seven"));
-		rs8.setText(settings.getString("rs8", "Eight"));
-		rs9.setText(settings.getString("rs9", "Nine"));
-		rs10.setText(settings.getString("rs10", "Ten"));
-		rt1.setText(settings.getString("rt1", "45"));
-		rt2.setText(settings.getString("rt2", "90"));
-		rt3.setText(settings.getString("rt3", "135"));
-		rt4.setText(settings.getString("rt4", "180"));
-		rt5.setText(settings.getString("rt5", "Custom"));
-		rd1.setText(settings.getString("rd1", "Forward"));
-		rd2.setText(settings.getString("rd2", "Back"));
-		rd3.setText(settings.getString("rd3", "Right"));
-		rd4.setText(settings.getString("rd4", "Left"));
+		actW.setText(settings.getString("actW", "Walk"));
+		actT.setText(settings.getString("actT", "Turn"));
+		actS.setText(settings.getString("actS", "Follow Shore line"));
+		s1.setText(settings.getString("s1", "One"));
+		s2.setText(settings.getString("s2", "Two"));
+		s3.setText(settings.getString("s3", "Three"));
+		s4.setText(settings.getString("s4", "Four"));
+		s5.setText(settings.getString("s5", "Five"));
+		s6.setText(settings.getString("s6", "Six"));
+		s7.setText(settings.getString("s7", "Seven"));
+		s8.setText(settings.getString("s8", "Eight"));
+		s9.setText(settings.getString("s9", "Nine"));
+		s10.setText(settings.getString("s10", "Ten"));
+		t1.setText(settings.getString("t1", "45"));
+		t2.setText(settings.getString("t2", "90"));
+		t3.setText(settings.getString("t3", "135"));
+		t4.setText(settings.getString("t4", "180"));
+		t5.setText(settings.getString("t5", "Custom"));
+		dF.setText(settings.getString("dF", "Forward"));
+		dB.setText(settings.getString("dB", "Back"));
+		dR.setText(settings.getString("dR", "Right"));
+		dL.setText(settings.getString("dL", "Left"));
+		dSR.setText(settings.getString("dSR", "Right"));
+		dSL.setText(settings.getString("dSL", "Left"));
 		textSteps.setText(settings.getString("textStep", "steps"));
 		textDegrees.setText(settings.getString("textDeg", "degrees to the"));
 	}
@@ -258,31 +257,78 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
-	/**
-	 * @param item
+	/** 
+	 * On menu connect selection, bluetooth connection is disconnected.
+	 * On menu disconnect selection, bluetooth connection is disconnected.
+	 * On menu edit selection, user is able to click buttons/text to edit their text.
+	 * On menu defaults selection, return buttons/texts to default.
 	 * 
-	 * On menu item selection, new thread is created to accept incoming bluetooth connections.
 	 */
-	public void connectDevice(MenuItem item) {
-		if(!connect) {
-			at = new AcceptThread();
-			at.start();
+	public void onOptionsSelected (MenuItem item) {
+		switch(item.getItemId()) {
+		case R.id.connect:
+			if(!connect) {
+				at = new AcceptThread();
+				at.start();
+			}
+			break;
+		case R.id.disconnect:
+			if(connect) {
+				at.wt.handShake.cancel();
+				at.wt.handShake.purge();
+				at.cancel();
+				cs.setText(getResources().getString(R.string.notready));
+				sent.setText("Message sent:");
+				cReady = false;
+				connect = false;
+			}
+			tButton.setChecked(false);
+			send.setEnabled(false);
+			CharSequence text = "Disconnected!";
+			int duration = Toast.LENGTH_SHORT;
+			Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+			toast.show();
+			break;
+		case R.id.edit:
+			if (!edit) {
+				edit = true;
+				item.setTitle("Set Words");
+				send.setEnabled(false);
+			}else {
+				edit = false;
+				item.setTitle("Edit Words");
+				setBase();
+				send.setEnabled(true);
+			}
+			break;
+		case R.id.retdefault:
+			SharedPreferences settings = getPreferences(MODE_PRIVATE);
+			SharedPreferences.Editor edit = settings.edit();
+			edit.putBoolean("saved", false);
+			edit.commit();
+			setPrevious();
+			setBase();
+			break;
+		case R.id.instructions:
+			Intent i = new Intent(MainActivity.this, InstructionScreen.class);
+			startActivity(i);
+			break;
+		default:
+			break;
 		}
 	}
 	
 	/**
-	 * @param item
-	 * 
-	 * On menu item selection, bluetooth connection is disconnected.
+	 * Disconnect bluetooth device.
 	 */
-	public void disconnectDevice(MenuItem item) {
+	private void disconnectDevice() {
 		if(connect) {
+			at.wt.stopHandshake();
 			at.cancel();
 			cs.setText(getResources().getString(R.string.notready));
 			sent.setText("Message sent:");
 			cReady = false;
 			connect = false;
-			at.wt.handShake.cancel();
 		}
 		tButton.setChecked(false);
 		send.setEnabled(false);
@@ -290,102 +336,6 @@ public class MainActivity extends Activity {
 		int duration = Toast.LENGTH_SHORT;
 		Toast toast = Toast.makeText(getApplicationContext(), text, duration);
 		toast.show();
-	}
-	
-	/**
-	 * @param item
-	 * 
-	 * On menu item selection, user is able to click buttons/text to edit their text.
-	 */
-	public void editWords(MenuItem item) {
-		if (!edit) {
-			edit = true;
-			item.setTitle("Set Words");
-			send.setEnabled(false);
-		}else {
-			edit = false;
-			item.setTitle("Edit Words");
-			setMessage();
-			send.setEnabled(true);
-		}
-	}
-
-	/**
-	 * Set message to be sent based on what radio buttons are selected.
-	 */
-	private void setMessage() {
-		switch(act.getCheckedRadioButtonId()) {
-		case R.id.walkbutton:
-			message.set(0,(String) ra1.getText());
-			switch(step.getCheckedRadioButtonId()) {
-			case R.id.onestep:
-				message.set(1,(String) rs1.getText());
-				break;
-			case R.id.twostep:
-				message.set(1,(String) rs2.getText());
-				break;
-			case R.id.threestep:
-				message.set(1,(String) rs3.getText());
-				break;
-			case R.id.fourstep:
-				message.set(1,(String) rs4.getText());
-				break;
-			case R.id.fivestep:
-				message.set(1,(String) rs5.getText());
-				break;
-			case R.id.sixstep:
-				message.set(1,(String) rs6.getText());
-				break;
-			case R.id.sevenstep:
-				message.set(1,(String) rs7.getText());
-				break;
-			case R.id.eightstep:
-				message.set(1,(String) rs8.getText());
-				break;
-			case R.id.ninestep:
-				message.set(1,(String) rs9.getText());
-				break;
-			case R.id.tenstep:
-				message.set(1,(String) rs10.getText());
-				break;
-			} 
-			break;
-		case R.id.turnbutton:
-			message.set(0,(String) ra2.getText()); 
-			switch (turn.getCheckedRadioButtonId()) {
-			case R.id.deg45:
-					message.set(1,(String) rt1.getText());
-				break;
-			case R.id.deg90:
-					message.set(1,(String) rt2.getText());
-				break;
-			case R.id.deg135:
-					message.set(1,(String) rt3.getText());
-				break;
-			case R.id.deg180:
-					message.set(1,(String) rt4.getText());
-				break;
-			}
-			break;
-		}  
-		switch(dir.getCheckedRadioButtonId()) {
-		case R.id.forward:
-				message.set(2,(String) rd1.getText());
-			break;
-		case R.id.back:
-				message.set(2,(String) rd2.getText());
-			break;
-		case R.id.right:
-				message.set(2,(String) rd3.getText());
-            	message.set(4, "right");
-			break;
-		case R.id.left:
-				message.set(2,(String) rd4.getText());
-            	message.set(4, "left");
-			break;
-		}
-		msgSteps = textSteps.getText().toString();
-		msgDegs = textDegrees.getText().toString();
 	}
 	
 	/**
@@ -426,20 +376,6 @@ public class MainActivity extends Activity {
 	}
 	
 	/**
-	 * @param item
-	 * 
-	 * Return buttons/texts to default.
-	 */
-	public void retDefault(MenuItem item) {
-		SharedPreferences settings = getPreferences(MODE_PRIVATE);
-		SharedPreferences.Editor edit = settings.edit();
-		edit.putBoolean("saved", false);
-		edit.commit();
-		setPrevious();
-		setMessage();
-	}
-	
-	/**
 	 * @param view
 	 * 
 	 * Sends an emergency stop signal to client. Can be sent even if client is not ready.
@@ -465,6 +401,55 @@ public class MainActivity extends Activity {
 	/**
 	 * @param view
 	 * 
+	 * When one of the standard command button is clicked 
+	 */
+	public void onStandardClicked(View view) {
+		if(!connect){
+			CharSequence text = "Not connected";
+			int duration = Toast.LENGTH_SHORT;
+			Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+			toast.show();
+			return;
+		}
+		switch(view.getId()) {
+		case R.id.estop:
+			String s= "Sound:Stop";
+			sent.setText("Message sent: Emergency Stop!");
+			at.wt.write(s.getBytes());
+			break;
+		case R.id.feelButton:
+			String f= "Sound:Feel";
+			sent.setText("Message sent: Feel for");
+			at.wt.write(f.getBytes());
+			break;
+		case R.id.scanButton:
+			String sc= "Sound:Scan";
+			sent.setText("Message sent: Scan for");
+			at.wt.write(sc.getBytes());
+			break;
+		case R.id.alignButton:
+			String a= "Sound:Align";
+			sent.setText("Message sent: Align with");
+			at.wt.write(a.getBytes());
+			break;
+		case R.id.popButton:
+			String p= "Sound:Pop";
+			sent.setText("Message sent: Pop up");
+			at.wt.write(p.getBytes());
+			break;
+		case R.id.squareButton:
+			String sq= "Sound:Square";
+			sent.setText("Message sent: Square off");
+			at.wt.write(sq.getBytes());
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/**
+	 * @param view
+	 * 
 	 * When startT button is pressed send a signal to client to begin logging.
 	 */
 	public void startLog(View view) {
@@ -483,141 +468,186 @@ public class MainActivity extends Activity {
 	}
 	
 	/**
-	 * @param view
-	 * 
-	 * Called when an action radiobutton is clicked. ie. Walk or Turn.
-	 * Enables or disables other buttons based on which is selected.
-	 * Also sets message based on selected radio buttons.
+	 * Update message to be sent on server screen
 	 */
-	public void onActionClicked(View view) {
-		boolean checked = ((RadioButton) view).isChecked();
-	    
-	    // Check which radio button was clicked
-	    switch(view.getId()) {
-	        case R.id.walkbutton:
-	            if (checked && !edit) {
-	                message.set(0,(String) ra1.getText());
-	                message.set(3, "Walk");
-	                rs1.setEnabled(true);rs2.setEnabled(true);rs3.setEnabled(true);rs4.setEnabled(true);rs5.setEnabled(true);
-	                rs6.setEnabled(true);rs7.setEnabled(true);rs8.setEnabled(true);rs9.setEnabled(true);rs10.setEnabled(true);
-	                rt1.setEnabled(false);rt2.setEnabled(false);rt3.setEnabled(false);rt4.setEnabled(false);rt5.setEnabled(false);editdeg.setEnabled(false);
-	                rd1.setEnabled(true); rd2.setEnabled(true); rd3.setEnabled(false); rd4.setEnabled(false);
-	                textSteps.setEnabled(true); textDegrees.setEnabled(false);
-	                if(rd3.isChecked() || rd4.isChecked()) rd1.setChecked(true);
-	                
-	                message.set(1,(String) ((RadioButton)findViewById(step.getCheckedRadioButtonId())).getText());
-	                message.set(2,(String) ((RadioButton)findViewById(dir.getCheckedRadioButtonId())).getText());
-	            } else if(edit) {
-	            	setNew("ra1", ra1);
-	            }
-	            break;
-	        case R.id.turnbutton:
-	            if (checked && !edit) {
-	                message.set(0,(String) ra2.getText()); 
-	                message.set(3, "Turn");
-	            	rs1.setEnabled(false);rs2.setEnabled(false);rs3.setEnabled(false);rs4.setEnabled(false);rs5.setEnabled(false);
-	                rs6.setEnabled(false);rs7.setEnabled(false);rs8.setEnabled(false);rs9.setEnabled(false);rs10.setEnabled(false);
-	                rt1.setEnabled(true);rt2.setEnabled(true);rt3.setEnabled(true);rt4.setEnabled(true);rt5.setEnabled(true);editdeg.setEnabled(true);
-	                rd3.setEnabled(true); rd4.setEnabled(true); rd1.setEnabled(false); rd2.setEnabled(false);
-	                textSteps.setEnabled(false); textDegrees.setEnabled(true);
-	                if(rd1.isChecked() || rd2.isChecked()) rd3.setChecked(true);
-
-	                if(((String) ((RadioButton)findViewById(turn.getCheckedRadioButtonId())).getText()).compareTo("Custom") == 0)
-	                	message.set(1,editdeg.getText().toString());
-	                else
-	                	message.set(1,(String) ((RadioButton)findViewById(turn.getCheckedRadioButtonId())).getText());
-	                message.set(2,(String) ((RadioButton)findViewById(dir.getCheckedRadioButtonId())).getText());
-	                if(rd3.isChecked())
-	                	message.set(4, "right");
-	                else if(rd4.isChecked())
-	                	message.set(4, "left");
-	            }else if(edit) {
-	            	setNew("ra2", ra2);
-	            }
-	            break;
-	        default:
-	        	break;
-	    }
+	public void updateMessage(int pos, String string) {
+		if(pos == -1) {
+			sent.setText("Message sending: " + string);
+			return;
+		}
+		String dispMessage = new String();
+		dispMessage = dispMessage.concat("Message sending: "+ message.get(0) + " " + message.get(1) + " "+ message.get(2) + " " + message.get(3));
+		sent.setText(dispMessage);
 	}
 	
 	/**
 	 * @param view
 	 * 
-	 * Called when a step value radio button is pressed. Also sets the message accordingly.
+	 * Called when an action button is clicked. ie. Walk or Turn.
+	 * Enables or disables other buttons based on which is selected.
+	 * Also sets message based on selected button.
+	 */
+	public void onActionClicked(View view) {
+	    
+	    switch(view.getId()) {
+	        case R.id.walkButton:
+	            if (!edit) {
+					customDeg = false;
+					customCmd = false;
+	                message.set(0,(String) actW.getText());
+	                message.set(2, msgSteps);
+	                message.set(4, "Walk");
+	                s1.setEnabled(true);s2.setEnabled(true);s3.setEnabled(true);s4.setEnabled(true);s5.setEnabled(true);
+	                s6.setEnabled(true);s7.setEnabled(true);s8.setEnabled(true);s9.setEnabled(true);s10.setEnabled(true);
+	                t1.setEnabled(false);t2.setEnabled(false);t3.setEnabled(false);t4.setEnabled(false);t5.setEnabled(false);editdeg.setEnabled(false);
+	                dF.setEnabled(true); dB.setEnabled(true); dR.setEnabled(false); dL.setEnabled(false); dSR.setEnabled(false); dSL.setEnabled(false);
+	                textSteps.setEnabled(true); textDegrees.setEnabled(false);
+	                
+	                updateMessage(0,(String) actW.getText());
+	                
+	            } else if(edit) {
+	            	setNew("actW", actW);
+	            }
+	            break;
+	        case R.id.turnButton:
+	            if (!edit) {
+					customDeg = false;
+					customCmd = false;
+	                message.set(0,(String) actT.getText()); 
+	                message.set(2, msgDegs);
+	                message.set(4, "Turn");
+	            	s1.setEnabled(false);s2.setEnabled(false);s3.setEnabled(false);s4.setEnabled(false);s5.setEnabled(false);
+	                s6.setEnabled(false);s7.setEnabled(false);s8.setEnabled(false);s9.setEnabled(false);s10.setEnabled(false);
+	                t1.setEnabled(true);t2.setEnabled(true);t3.setEnabled(true);t4.setEnabled(true);t5.setEnabled(true);editdeg.setEnabled(true);
+	                dR.setEnabled(true); dL.setEnabled(true); dF.setEnabled(false); dB.setEnabled(false); dSR.setEnabled(false); dSL.setEnabled(false);
+	                textSteps.setEnabled(false); textDegrees.setEnabled(true);
+
+	                updateMessage(0, (String) actT.getText());
+	            }else if(edit) {
+	            	setNew("actT", actT);
+	            }
+	            break;
+	        case R.id.shorelineButton:
+	        	if (!edit) {
+					customDeg = false;
+					customCmd = false;
+	                message.set(0,(String) actS.getText()); 
+	                message.set(1, "");
+	                message.set(2, "");
+	                message.set(4, "Follow Shore line");
+	            	s1.setEnabled(false);s2.setEnabled(false);s3.setEnabled(false);s4.setEnabled(false);s5.setEnabled(false);
+	                s6.setEnabled(false);s7.setEnabled(false);s8.setEnabled(false);s9.setEnabled(false);s10.setEnabled(false);
+	                t1.setEnabled(false);t2.setEnabled(false);t3.setEnabled(false);t4.setEnabled(false);t5.setEnabled(false);editdeg.setEnabled(false);
+	                dR.setEnabled(false); dL.setEnabled(false); dF.setEnabled(false); dB.setEnabled(false); dSR.setEnabled(true); dSL.setEnabled(true);
+	                textSteps.setEnabled(false); textDegrees.setEnabled(true);
+
+	                updateMessage(0, (String) actS.getText());
+	            }else if(edit) {
+	            	setNew("actS", actS);
+	            }
+	            break;
+	        case R.id.useButton:
+	        	customDeg = false;
+	        	customCmd = true;
+	        	message.set(0, "Custom");
+	        	message.set(1, "Custom");
+	        	message.set(2, "Custom");
+	        	message.set(3, "Custom");
+	        	message.set(4, "Custom");
+	        	message.set(5, "Custom");
+	        	updateMessage(-1, customTxt.getText().toString());
+	        default:
+	        	break;
+	    }
+	}	
+	
+	/**
+	 * @param view
+	 * 
+	 * Called when a step value button is pressed. Also sets the message accordingly.
 	 */
 	public void onStepClicked(View view) {
-		boolean checked = ((RadioButton) view).isChecked();
 
 		// Check which radio button was clicked
 		switch(view.getId()) {
-		case R.id.onestep:
-			if (checked && !edit) {
-				message.set(1,(String) rs1.getText());
+		case R.id.button1:
+			if (!edit) {
+				message.set(1,(String) s1.getText());
+				updateMessage(1,(String) s1.getText());
 			}else if(edit) {
-				setNew("rs1", rs1);
+				setNew("s1", s1);
 			}
 			break;
-		case R.id.twostep:
-			if (checked && !edit) {
-				message.set(1,(String) rs2.getText());
+		case R.id.button2:
+			if (!edit) {
+				message.set(1,(String) s2.getText());
+				updateMessage(1,(String) s2.getText());
 			}else if(edit) {
-				setNew("rs2", rs2);
+				setNew("s2", s2);
 			}
 			break;
-		case R.id.threestep:
-			if (checked && !edit) {
-				message.set(1,(String) rs3.getText());
+		case R.id.button3:
+			if (!edit) {
+				message.set(1,(String) s3.getText());
+				updateMessage(1,(String) s3.getText());
 			}else if(edit) {
-				setNew("rs3", rs3);
+				setNew("s3", s3);
 			}
 			break;
-		case R.id.fourstep:
-			if (checked && !edit) {
-				message.set(1,(String) rs4.getText());
+		case R.id.button4:
+			if (!edit) {
+				message.set(1,(String) s4.getText());
+				updateMessage(1,(String) s4.getText());
 			}else if(edit) {
-				setNew("rs4", rs4);
+				setNew("s4", s4);
 			}
 			break;
-		case R.id.fivestep:
-			if (checked && !edit) {
-				message.set(1,(String) rs5.getText());
+		case R.id.button5:
+			if (!edit) {
+				message.set(1,(String) s5.getText());
+				updateMessage(1,(String) s5.getText());
 			}else if(edit) {
-				setNew("rs5", rs5);
+				setNew("s5",s5);
 			}
 			break;
-		case R.id.sixstep:
-			if (checked && !edit) {
-				message.set(1,(String) rs6.getText());
+		case R.id.button6:
+			if (!edit) {
+				message.set(1,(String) s6.getText());
+				updateMessage(1,(String) s6.getText());
 			}else if(edit) {
-				setNew("rs6", rs6);
+				setNew("s6", s6);
 			}
 			break;
-		case R.id.sevenstep:
-			if (checked && !edit) {
-				message.set(1,(String) rs7.getText());
+		case R.id.button7:
+			if (!edit) {
+				message.set(1,(String) s7.getText());
+				updateMessage(1,(String) s7.getText());
 			}else if(edit) {
-				setNew("rs7", rs7);
+				setNew("s7", s7);
 			}
 			break;
-		case R.id.eightstep:
-			if (checked && !edit) {
-				message.set(1,(String) rs8.getText());
+		case R.id.button8:
+			if (!edit) {
+				message.set(1,(String) s8.getText());
+				updateMessage(1,(String) s8.getText());
 			}else if(edit) {
-				setNew("rs8", rs8);
+				setNew("s8", s8);
 			}
 			break;
-		case R.id.ninestep:
-			if (checked && !edit) {
-				message.set(1,(String) rs9.getText());
+		case R.id.button9:
+			if (!edit) {
+				message.set(1,(String) s9.getText());
+				updateMessage(1,(String) s9.getText());
 			}else if(edit) {
-				setNew("rs9", rs9);
+				setNew("s9", s9);
 			}
 			break;
-		case R.id.tenstep:
-			if (checked && !edit) {
-				message.set(1,(String) rs10.getText());
+		case R.id.button10:
+			if (!edit) {
+				message.set(1,(String) s10.getText());
+				updateMessage(1,(String) s10.getText());
 			}else if(edit) {
-				setNew("rs10", rs10);
+				setNew("s10", s10);
 			}
 			break;
 		default:
@@ -628,46 +658,55 @@ public class MainActivity extends Activity {
 	/**
 	 * @param view
 	 * 
-	 * Called when a turn value radio button is pressed. Also sets the message accordingly
+	 * Called when a turn value button is pressed. Also sets the message accordingly
 	 */
 	public void onTurnClicked(View view) {
-		boolean checked = ((RadioButton) view).isChecked();
 
 		// Check which radio button was clicked
 		switch(view.getId()) {
 		case R.id.deg45:
-			if (checked && !edit) {
-				message.set(1,(String) rt1.getText());
+			if (!edit) {
+				customDeg = false;
+				message.set(1,(String) t1.getText());
+				updateMessage(1,(String) t1.getText());
 			}else if(edit) {
-				setNew("rt1", rt1);
+				setNew("t1", t1);
 			}
 			break;
 		case R.id.deg90:
-			if (checked && !edit) {
-				message.set(1,(String) rt2.getText());
+			if (!edit) {
+				customDeg = false;
+				message.set(1,(String) t2.getText());
+				updateMessage(1,(String) t2.getText());
 			}else if(edit) {
-				setNew("rt2", rt2);
+				setNew("t2", t2);
 			}
 			break;
 		case R.id.deg135:
-			if (checked && !edit) {
-				message.set(1,(String) rt3.getText());
+			if (!edit) {
+				customDeg = false;
+				message.set(1,(String) t3.getText());
+				updateMessage(1,(String) t3.getText());
 			}else if(edit) {
-				setNew("rt3", rt3);
+				setNew("t3", t3);
 			}
 			break;
 		case R.id.deg180:
-			if (checked && !edit) {
-				message.set(1,(String) rt4.getText());
+			if (!edit) {
+				customDeg = false;
+				message.set(1,(String) t4.getText());
+				updateMessage(1,(String) t4.getText());
 			}else if(edit) {
-				setNew("rt4", rt4);
+				setNew("t4", t4);
 			}
 			break;
 		case R.id.degcustom:
-			if (checked && !edit) {
-				editdeg.requestFocus();
+			if (!edit) {
+				customDeg = true;
+				message.set(1, editdeg.getText().toString());
+				updateMessage(1, editdeg.getText().toString());
 			}else if(edit) {
-				setNew("rt5", rt5);
+				setNew("t5", t5);
 			}
 			break;
 		default:
@@ -682,38 +721,57 @@ public class MainActivity extends Activity {
 	 * Called when a direction radio button is pressed. Also sets the message accordingly
 	 */
 	public void onDirClicked(View view) {
-		boolean checked = ((RadioButton) view).isChecked();
 
 		// Check which radio button was clicked
 		switch(view.getId()) {
-		case R.id.forward:
-			if (checked && !edit) {
-				message.set(2,(String) rd1.getText());
+		case R.id.forwardButton:
+			if (!edit) {
+				message.set(3,(String) dF.getText());
+				updateMessage(3,(String) dF.getText());
 			}else if(edit) {
-				setNew("rd1", rd1);
+				setNew("dF", dF);
 			}
 			break;
-		case R.id.back:
-			if (checked && !edit) {
-				message.set(2,(String) rd2.getText());
+		case R.id.backButton:
+			if (!edit) {
+				message.set(3,(String) dB.getText());
+				updateMessage(3,(String) dB.getText());
 			}else if(edit) {
-				setNew("rd2", rd2);
+				setNew("dB", dB);
 			}
 			break;
-		case R.id.right:
-			if (checked && !edit) {
-				message.set(2,(String) rd3.getText());
-            	message.set(4, "right");
+		case R.id.rightButton:
+			if (!edit) {
+				message.set(3,(String) dR.getText());
+				message.set(5,"right");
+				updateMessage(3,(String) dR.getText());
 			}else if(edit) {
-				setNew("rd3", rd3);
+				setNew("dR", dR);
 			}
 			break;
-		case R.id.left:
-			if (checked && !edit) {
-				message.set(2,(String) rd4.getText());
-            	message.set(4, "left");
+		case R.id.leftButton:
+			if (!edit) {
+				message.set(3,(String) dL.getText());
+				message.set(5,"left");
+				updateMessage(3,(String) dL.getText());
 			}else if(edit) {
-				setNew("rd4", rd4);
+				setNew("dL", dL);
+			}
+			break;
+		case R.id.shoreLeftButton:
+			if (!edit) {
+				message.set(3,(String) dSL.getText());
+				updateMessage(3,(String) dSL.getText());
+			}else if(edit) {
+				setNew("dSL", dSL);
+			}
+			break;
+		case R.id.shoreRightButton:
+			if (!edit) {
+				message.set(3,(String) dSR.getText());
+				updateMessage(3,(String) dSR.getText());
+			}else if(edit) {
+				setNew("dSR", dSR);
 			}
 			break;
 		default:
@@ -728,29 +786,32 @@ public class MainActivity extends Activity {
 	 * The message is sent to the client application.
 	 */
 	public void onSendClicked(View view) {
-		if(message.size() < 5) {
+		if(message.size() < 6) {
 			sent.setText("Message size error, not sent.");
 			return;
 		}
-		String dispMessage = new String(); 
+		String dispMessage = new String();
+		String sendMessage = new String();
 		byte[] b = new byte[1024];
-		if(ra1.isChecked()) {
-			dispMessage = dispMessage.concat(message.get(0) + " " + message.get(1) + " "+ msgSteps + " " + message.get(2));
-			sent.setText(dispMessage);
-			b = msgToByteArray(msgSteps,dispMessage);
-		} else if(ra2.isChecked()) {
-			if(rt5.isChecked()){
-				String custom = editdeg.getText().toString();
-				if(custom.length() < 1) {
-					sent.setText("Custom degrees error, not sent.");
-					return;
-				}
-				message.set(1, custom);
+		if(customDeg) {
+			String customTxt = editdeg.getText().toString();
+			message.set(1, editdeg.getText().toString());
+			if(customTxt.length() < 1) {
+				sent.setText("Custom degrees error, not sent.");
+				return;
 			}
-			dispMessage = dispMessage.concat(message.get(0) + " " + message.get(1) + " "+msgDegs+" " + message.get(2));
-			sent.setText(dispMessage);
-			b = msgToByteArray(msgDegs,dispMessage);
+		} else if (customCmd) {
+			String customTxt_ = customTxt.getText().toString();
+			sent.setText("Message sent: " + customTxt_);
+			b = msgToByteArray(customTxt_);
+			if(b != null)
+				at.wt.write(b);
+			return;
 		}
+		dispMessage = dispMessage.concat("Message sent: "+ message.get(0) + " " + message.get(1) + " "+ message.get(2) + " " + message.get(3));
+		sent.setText(dispMessage);
+		sendMessage = sendMessage.concat(message.get(0) + " " + message.get(1) + " "+ message.get(2) + " " + message.get(3));
+		b = msgToByteArray(sendMessage);
 		if(b != null)
 			at.wt.write(b);
 	}
@@ -780,14 +841,14 @@ public class MainActivity extends Activity {
 	 * 
 	 * Converts the message to be sent from a string array to a byte array.
 	 */
-	private byte[] msgToByteArray(String mid, String whole) {
+	private byte[] msgToByteArray(String whole) {
 		ArrayList<String> bA = new ArrayList<String>();
 		bA.add(message.get(0));//Action
 		bA.add(message.get(1));//Steps or degrees
-		bA.add(mid);
-		bA.add(message.get(2));//Dir
-		bA.add(message.get(3));//walk or turn
-		bA.add(message.get(4));//left or right
+		bA.add(message.get(2));
+		bA.add(message.get(3));//Dir
+		bA.add(message.get(4));//walk or turn or shoreline or custom
+		bA.add(message.get(5));//left or right
 		bA.add(whole);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos;
@@ -919,6 +980,14 @@ public class MainActivity extends Activity {
 	 
 	        mmInStream = tmpIn;
 	        mmOutStream = tmpOut;
+	    }
+	    
+	    /**
+	     * Stop handshake timer
+	     */
+	    private void stopHandshake() {
+	    	handShake.purge();
+	    	handShake.cancel();
 	    }
 	 
 	    /**

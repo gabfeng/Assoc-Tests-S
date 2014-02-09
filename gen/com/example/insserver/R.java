@@ -11,56 +11,76 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
+        public static final int blue=0x7f040001;
+        public static final int blue2=0x7f040002;
+        public static final int darkgreen=0x7f040007;
+        public static final int darkgreen2=0x7f040008;
         public static final int grey=0x7f040000;
+        public static final int red=0x7f040005;
+        public static final int red2=0x7f040006;
+        public static final int yellow=0x7f040003;
+        public static final int yellow2=0x7f040004;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int actionbutton=0x7f020000;
+        public static final int dirbutton=0x7f020001;
+        public static final int distbutton=0x7f020002;
+        public static final int ic_launcher=0x7f020003;
+        public static final int sendbutton=0x7f020004;
     }
     public static final class id {
-        public static final int actionradio=0x7f080005;
-        public static final int back=0x7f08001c;
-        public static final int connect=0x7f080025;
-        public static final int deg135=0x7f080016;
-        public static final int deg180=0x7f080017;
-        public static final int deg45=0x7f080014;
-        public static final int deg90=0x7f080015;
-        public static final int degcustom=0x7f080018;
-        public static final int dirradio=0x7f08001a;
-        public static final int disconnect=0x7f080026;
-        public static final int edit=0x7f080027;
-        public static final int editdeg=0x7f080019;
-        public static final int eightstep=0x7f080010;
-        public static final int estop=0x7f080021;
-        public static final int fivestep=0x7f08000d;
-        public static final int forward=0x7f08001b;
-        public static final int fourstep=0x7f08000c;
-        public static final int left=0x7f08001e;
-        public static final int menu_settings=0x7f080024;
-        public static final int ninestep=0x7f080011;
-        public static final int onestep=0x7f080009;
-        public static final int retdefault=0x7f080028;
-        public static final int right=0x7f08001d;
-        public static final int send=0x7f08001f;
-        public static final int sent=0x7f080020;
-        public static final int sevenstep=0x7f08000f;
-        public static final int sixstep=0x7f08000e;
+        public static final int alignButton=0x7f080008;
+        public static final int backButton=0x7f08001d;
+        public static final int button1=0x7f080011;
+        public static final int button10=0x7f08001a;
+        public static final int button2=0x7f080012;
+        public static final int button3=0x7f080013;
+        public static final int button4=0x7f080014;
+        public static final int button5=0x7f080015;
+        public static final int button6=0x7f080016;
+        public static final int button7=0x7f080017;
+        public static final int button8=0x7f080018;
+        public static final int button9=0x7f080019;
+        public static final int connect=0x7f08002b;
+        public static final int customText=0x7f08000e;
+        public static final int deg135=0x7f080021;
+        public static final int deg180=0x7f080022;
+        public static final int deg45=0x7f08001f;
+        public static final int deg90=0x7f080020;
+        public static final int degcustom=0x7f080023;
+        public static final int disconnect=0x7f08002c;
+        public static final int edit=0x7f08002d;
+        public static final int editdeg=0x7f080024;
+        public static final int estop=0x7f080006;
+        public static final int feelButton=0x7f080007;
+        public static final int forwardButton=0x7f08001c;
+        public static final int instructions=0x7f08002f;
+        public static final int leftButton=0x7f080026;
+        public static final int menu_settings=0x7f08002a;
+        public static final int popButton=0x7f08000a;
+        public static final int retdefault=0x7f08002e;
+        public static final int rightButton=0x7f080027;
+        public static final int scanButton=0x7f080009;
+        public static final int send=0x7f08000c;
+        public static final int sent=0x7f080005;
+        public static final int shoreLeftButton=0x7f080028;
+        public static final int shoreRightButton=0x7f080029;
+        public static final int shorelineButton=0x7f080010;
+        public static final int squareButton=0x7f08000b;
         public static final int startT=0x7f080004;
-        public static final int stepradio=0x7f080008;
-        public static final int tenstep=0x7f080012;
-        public static final int textDegs=0x7f080023;
-        public static final int textSteps=0x7f080022;
+        public static final int textDegs=0x7f080025;
+        public static final int textSteps=0x7f08001b;
         public static final int textView1=0x7f080000;
         public static final int textView2=0x7f080001;
         public static final int textView3=0x7f080002;
-        public static final int threestep=0x7f08000b;
         public static final int tstatus=0x7f080003;
-        public static final int turnbutton=0x7f080007;
-        public static final int turnradio=0x7f080013;
-        public static final int twostep=0x7f08000a;
-        public static final int walkbutton=0x7f080006;
+        public static final int turnButton=0x7f08001e;
+        public static final int useButton=0x7f08000d;
+        public static final int walkButton=0x7f08000f;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
+        public static final int instructions=0x7f030001;
     }
     public static final class menu {
         public static final int activity_main=0x7f070000;
@@ -69,6 +89,16 @@ public final class R {
         public static final int app_name=0x7f050000;
         public static final int clientstatusText=0x7f050004;
         public static final int hello_world=0x7f050001;
+        public static final int inst1=0x7f050010;
+        public static final int inst10=0x7f050019;
+        public static final int inst2=0x7f050011;
+        public static final int inst3=0x7f050012;
+        public static final int inst4=0x7f050013;
+        public static final int inst5=0x7f050014;
+        public static final int inst6=0x7f050015;
+        public static final int inst7=0x7f050016;
+        public static final int inst8=0x7f050017;
+        public static final int inst9=0x7f050018;
         public static final int live=0x7f050009;
         public static final int lowacc=0x7f05000a;
         public static final int menu_connect=0x7f050003;
@@ -78,6 +108,7 @@ public final class R {
         public static final int notready=0x7f050006;
         public static final int off=0x7f05000b;
         public static final int ready=0x7f050005;
+        public static final int shoreline=0x7f05000f;
         public static final int stop=0x7f050007;
         public static final int turn=0x7f05000e;
         public static final int walk=0x7f05000d;

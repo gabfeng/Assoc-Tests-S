@@ -16,5 +16,16 @@
     <string name="name">Name</string>
     <string name="walk">Walk</string>
     <string name="turn">Turn</string>
+    <string name="shoreline">Follow Shore line</string>
+    <string name="inst1">1. Pair bluetooth devices in system preferences.</string>
+    <string name="inst2">2. Open connection on server device</string>
+    <string name="inst3">3. Connect on client device through menu options and select server device.</string>
+    <string name="inst4">4. Type in name of testee and click menu option to set name.</string><string name="inst5">5. Start log with button on server device.</string>
+    <string name="inst6">6. Run tests.</string>
+    <string name="inst7">7. Stop and log with button on server device.</string>
+    <string name="inst8">*Client has to touch screen to let server device know it is ready.</string><string name="inst9">*If connection lost save current log by choosing &quot;End log&quot; on client device.</string>
+    
+    <string name="inst10">*Log files found on local drive in &quot;logs&quot; folder</string>
+    
 
 </resources>
